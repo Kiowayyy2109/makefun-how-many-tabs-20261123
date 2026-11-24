@@ -15,10 +15,20 @@ OUTPUT_DIR = Path("/output")
 OUTPUT_PATH = OUTPUT_DIR / "entry.txt"
 
 
+def validate_count(text: str) -> None:
+    if not text.isdigit():
+        raise ValueError("tab count must be digits only")
+    if not 1 <= int(text) <= 9999:
+        raise ValueError("tab count out of plausible range")
+
+
 def write_entry(path: Path = OUTPUT_PATH) -> None:
+    validate_count(TAB_COUNT)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="\n") as handle:
         handle.write(TAB_COUNT)
+    if path.read_text(encoding="utf-8") != TAB_COUNT:
+        raise IOError("written entry does not match the tab count")
 
 
 def main() -> None:
